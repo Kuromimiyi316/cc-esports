@@ -29,9 +29,19 @@
         .banner-buttons { display: flex; gap: 15px; }
         .btn-white { background: white; color: var(--primary); border: none; padding: 10px 24px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition); }
         .btn-white:hover { background: #fff5ee; transform: translateY(-2px); }
-        .btn-outline { background: transparent; color: white; border: 1px solid white; padding: 10px 24px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: var(--transition); }
-        .btn-outline:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .banner-img-placeholder { width: 200px; height: 120px; background: rgba(255,255,255,0.3); border-radius: var(--radius-md); display: flex; justify-content: center; align-items: center; font-size: 12px; color: white; overflow: hidden; }
+        .banner-img-placeholder {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 4px solid rgba(255,255,255,0.6);
+            box-shadow: 0 6px 20px rgba(255, 127, 80, 0.3);
+        }
         .banner-img-placeholder img { width: 100%; height: 100%; object-fit: cover; }
 
         /* ========== 搜索与分类 ========== */
@@ -59,6 +69,7 @@
         .btn-view:hover { border-color: var(--primary); color: var(--primary); }
         .btn-add { background: var(--primary); border: 1px solid var(--primary); color: white; }
         .btn-add:hover { background: #e06b40; }
+        .card-actions.single button { flex: 1; }
 
         /* ========== 图片模态框 ========== */
         .image-modal {
@@ -128,16 +139,32 @@
         .btn-copy:hover { background: #e06b40; }
         .empty-cart { text-align: center; color: var(--text-sub); margin-top: 50px; font-size: 14px; }
 
+        /* ========== 页脚版权 ========== */
+        .page-footer {
+            text-align: center;
+            padding: 30px 20px 40px;
+            color: var(--text-sub);
+            font-size: 13px;
+            letter-spacing: 1px;
+            border-top: 1px solid #ffefe8;
+            margin-top: 20px;
+        }
+        .page-footer span {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .banner { flex-direction: column; text-align: center; padding: 30px 20px; }
             .banner-content h1 { font-size: 22px; }
-            .banner-img-placeholder { display: none; }
+            .banner-img-placeholder { width: 120px; height: 120px; margin-top: 15px; }
             .banner-buttons { justify-content: center; }
             .menu-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
             .card-img { height: 120px; }
             .card-title { font-size: 14px; }
             .card-actions button { font-size: 11px; padding: 6px 0; }
             .drawer { width: 100%; right: -100%; border-radius: 0; }
+            .page-footer { font-size: 12px; padding: 20px 15px 30px; }
         }
     </style>
 </head>
@@ -148,7 +175,7 @@
 
     <!-- 顶部导航 -->
     <header>
-        <div class="logo"><span>🍊</span> 橙澈电竞</div>
+        <div class="logo"><span>🍊</span> 橙澈电竞 - 专属价目表</div>
         <button class="cart-btn" onclick="toggleDrawer()">点单夹 <span class="cart-count" id="cartCount">0</span></button>
     </header>
 
@@ -161,17 +188,16 @@
                     <p>本俱乐部主营三角洲端游，纯绿护航，实力在线，欢迎宝宝快速浏览以下玩法，加入点单夹一键复制给客服咨询~</p>
                     <div class="banner-buttons">
                         <button class="btn-white" onclick="showCustomerService()">联系客服</button>
-                        <button class="btn-outline" onclick="alert('即将前往点单页')">立即点单 →</button>
                     </div>
                 </div>
                 <div class="banner-img-placeholder">
-                    <img src="https://i.postimg.cc/FRZ2nY7k/tou-xiang.png" alt="Banner" onerror="this.onerror=null;this.src='https://placehold.co/400x200/ffdab9/ffffff?text=Banner';">
+                    <img src="https://i.postimg.cc/FRZ2nY7k/tou-xiang.png" alt="Banner" onerror="this.onerror=null;this.src='https://placehold.co/400x400/ffdab9/ffffff?text=Banner';">
                 </div>
             </div>
 
             <div class="search-section">
                 <div class="search-bar">
-                    <input type="text" id="searchInput" placeholder="搜索玩法名称... 例如：黄金矿工" oninput="filterCards()">
+                    <input type="text" id="searchInput" placeholder="搜索玩法名称…例如：小小巨人" oninput="filterCards()">
                     <button>搜索</button>
                 </div>
                 <div class="category-tabs" id="categoryTabs"></div>
@@ -180,6 +206,11 @@
             <div class="menu-grid" id="menuGrid"></div>
         </section>
     </main>
+
+    <!-- 页脚版权 -->
+    <footer class="page-footer">
+        © 橙澈电竞 <span>CC Esports</span> 最终解释权归橙澈电竞所有
+    </footer>
 
     <!-- 图片模态框 -->
     <div class="image-modal" id="imageModal" onclick="closeModal(event)">
@@ -215,23 +246,14 @@
 
         // ==================== 菜单数据 ====================
         const menuData = [
-            // 重要必看
             { id: 1, title: '老板权益', tag: '老板必看', desc: '老板权益，提供保障与下单须知。', price: '重要必看', category: 'important', img: 'https://i.postimg.cc/JnmfqN4D/lao-ban-xu-zhi-quan-yi.jpg' },
             { id: 2, title: '点单须知', tag: '须知主题', desc: '点单、维护、退款与售后规则，下单前建议先查看。', price: '重要必看', category: 'important', img: 'https://i.postimg.cc/mDRvwY2Q/pei-fu-xu-zhi.jpg' },
-
-            // 会员权益专区
             { id: 3, title: '会员权益', tag: 'VIP专区', desc: '会员专享权益，尊贵体验。', price: '会员专享', category: 'vip', img: 'https://i.postimg.cc/y8K65Zd7/hui-yuan-quan-yi.png' },
-
-            // 体验单/护航单
             { id: 4, title: '新客体验', tag: '体验主题', desc: '新客户专享体验单，快速上手。', price: '体验价', category: 'delta', img: 'https://i.postimg.cc/LXRcTt6q/jue-mi-ti-yan-dan.jpg' },
             { id: 5, title: '机密体验', tag: '机密主题', desc: '机密专属体验，内容更丰富。', price: '机密价', category: 'delta', img: 'https://i.postimg.cc/k490cQXC/ji-mi-ti-yan-dan.jpg' },
             { id: 6, title: '正价护航', tag: '护航主题', desc: '正价护航，稳定保障全程。', price: '正价', category: 'delta', img: 'https://i.postimg.cc/0QxTfY2z/jue-mi-zheng-jia-hu-hang-dan.jpg' },
-
-            // 陪玩单
             { id: 7, title: '陪玩价目表', tag: '陪玩主题', desc: '陪玩价格一览，多种时段可选。', price: '详见价目表', category: 'peiwang', img: 'https://i.postimg.cc/W3jBnGbq/jue-mi-pei-wan.jpg' },
             { id: 8, title: '机密陪玩单', tag: '机密主题', desc: '机密陪玩，专属定制体验。', price: '机密价', category: 'peiwang', img: 'https://i.postimg.cc/Qts2bQxs/ji-mi-pei-wan-dan.jpg' },
-
-            // 趣味单专区
             { id: 9, title: '一命通关', tag: '挑战主题', desc: '一命通关，挑战极限操作。', price: '趣味价', category: 'fun', img: 'https://i.postimg.cc/503ZkX6C/yi-ming-tong-guan.jpg' },
             { id: 10, title: '铁人三项', tag: '挑战主题', desc: '铁人三项，综合考验实力。', price: '趣味价', category: 'fun', img: 'https://i.postimg.cc/cHZpmR4B/tie-ren-san-xiang.jpg' },
             { id: 11, title: '小小巨人', tag: '趣味主题', desc: '小小巨人，趣味与挑战并存。', price: '趣味价', category: 'fun', img: 'https://i.postimg.cc/sXct0MvZ/xiao-xiao-ju-ren.jpg' },
@@ -245,7 +267,6 @@
 
         let cart = [];
 
-        // ==================== 加载页隐藏（兜底） ====================
         window.addEventListener('load', function() { setTimeout(hideLoader, 800); });
         setTimeout(hideLoader, 5000);
         function hideLoader() {
@@ -256,7 +277,6 @@
             }
         }
 
-        // ==================== 页面初始化 ====================
         window.addEventListener('DOMContentLoaded', function() {
             try {
                 renderCategories();
@@ -297,15 +317,19 @@
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.dataset.category = item.category;
+                const noCart = item.category === 'important' || item.category === 'vip';
+                const actionsHtml = noCart
+                    ? `<div class="card-actions single"><button class="btn-view" onclick="viewImage('${item.img}')">查看原图</button></div>`
+                    : `<div class="card-actions">
+                           <button class="btn-view" onclick="viewImage('${item.img}')">查看原图</button>
+                           <button class="btn-add" onclick="addToCart(${item.id}, '${item.title}', '${item.price}')">+ 加入点单夹</button>
+                       </div>`;
                 card.innerHTML = `
                     <img src="${item.img}" class="card-img" alt="${item.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/ffdab9/ffffff?text=图片加载失败';">
                     <div class="card-body">
                         <div class="card-title">${item.title}<span class="card-tag">${item.tag}</span></div>
                         <div class="card-desc">${item.desc}</div>
-                        <div class="card-actions">
-                            <button class="btn-view" onclick="viewImage('${item.img}')">查看原图</button>
-                            <button class="btn-add" onclick="addToCart(${item.id}, '${item.title}', '${item.price}')">+ 加入点单夹</button>
-                        </div>
+                        ${actionsHtml}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -324,7 +348,6 @@
             renderMenu(filtered);
         }
 
-        // ==================== 图片弹窗 ====================
         function viewImage(imgUrl) {
             const modal = document.getElementById('imageModal');
             const modalImg = document.getElementById('modalImage');
@@ -337,7 +360,6 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // 联系客服弹窗
         function showCustomerService() {
             viewImage('https://i.postimg.cc/B6BXYBTy/fen-lan-mei-hua-ma-(2).png');
         }
@@ -363,7 +385,6 @@
             }
         });
 
-        // ==================== 点单夹逻辑 ====================
         function addToCart(id, title, price) {
             const exists = cart.find(item => item.id === id);
             if (exists) { alert('该菜单已在点单夹中！'); return; }
@@ -395,7 +416,6 @@
             document.getElementById('drawerOverlay').classList.toggle('open');
         }
 
-        // ==================== 复制清单（兼容本地环境） ====================
         function copyList() {
             if (cart.length === 0) {
                 alert('点单夹是空的，先去选购吧！');
@@ -406,8 +426,6 @@
                 text += `${index + 1}. ${item.title} - ${item.price}\n`;
             });
             text += '\n请客服确认，谢谢！';
-
-            // 优先使用现代剪贴板 API
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(text).then(() => {
                     alert('✅ 清单已复制，快去发给客服吧！');
@@ -419,7 +437,6 @@
             }
         }
 
-        // 兼容本地 file:// 或非 HTTPS 环境的复制方案
         function fallbackCopy(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -429,7 +446,7 @@
             textarea.setAttribute('readonly', '');
             document.body.appendChild(textarea);
             textarea.select();
-            textarea.setSelectionRange(0, textarea.value.length); // 兼容 iOS
+            textarea.setSelectionRange(0, textarea.value.length);
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
