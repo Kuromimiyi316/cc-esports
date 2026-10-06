@@ -172,16 +172,13 @@
 </head>
 <body>
 
-    <!-- 加载页 -->
     <div id="loading-screen"><div class="loading-text">橙澈电竞，愿你如星月，夜夜尽皎洁</div></div>
 
-    <!-- 顶部导航 -->
     <header>
         <div class="logo"><span>🍊</span> 橙澈电竞 - 专属价目表</div>
         <button class="cart-btn" onclick="toggleDrawer()">点单夹 <span class="cart-count" id="cartCount">0</span></button>
     </header>
 
-    <!-- 主体内容 -->
     <main class="container">
         <section id="menu">
             <div class="banner">
@@ -209,19 +206,16 @@
         </section>
     </main>
 
-    <!-- 页脚版权 -->
     <footer class="page-footer">
         © 橙澈电竞 <span>CC Esports</span> 最终解释权归橙澈电竞所有
     </footer>
 
-    <!-- 图片模态框 -->
     <div class="image-modal" id="imageModal" onclick="closeModal(event)">
         <button class="close-modal" onclick="closeImageModal()">×</button>
         <img id="modalImage" src="" alt="图片">
         <div class="modal-tip">点击空白处或右上角关闭</div>
     </div>
 
-    <!-- 点单夹抽屉 -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-header">
@@ -239,7 +233,7 @@
     <script>
         // ==================== 分类数据 ====================
         const categoryData = [
-            { name: '重要必看', id: 'important' },
+            { name: '下单须知', id: 'important' },
             { name: '会员权益专区', id: 'vip' },
             { name: '体验单/护航单', id: 'delta' },
             { name: '陪玩单', id: 'peiwang' },
@@ -249,18 +243,30 @@
 
         // ==================== 菜单数据 ====================
         const menuData = [
-            { id: 1, title: '老板权益', tag: '老板必看', desc: '老板权益，提供保障与下单须知。', price: '重要必看', category: 'important', img: 'https://i.postimg.cc/JnmfqN4D/lao-ban-xu-zhi-quan-yi.jpg' },
-            { id: 2, title: '点单须知', tag: '须知主题', desc: '点单、维护、退款与售后规则，下单前建议先查看。', price: '重要必看', category: 'important', img: 'https://i.postimg.cc/mDRvwY2Q/pei-fu-xu-zhi.jpg' },
+            // 下单须知
+            { id: 1, title: '老板权益', tag: '老板必看', desc: '老板权益，提供保障与下单须知。', price: '下单须知', category: 'important', img: 'https://i.postimg.cc/1zm8HrXd/lao-ban-quan-yi2.jpg' },
+            { id: 2, title: '老板须知', tag: '须知主题', desc: '老板须知，下单前建议先查看。', price: '下单须知', category: 'important', img: 'https://i.postimg.cc/PqXC4QJR/lao-ban-xu-zhi.jpg' },
+            { id: 23, title: '结单标准', tag: '结单主题', desc: '结单标准，明确结算规则。', price: '下单须知', category: 'important', img: 'https://i.postimg.cc/vmY4ztTf/jie-dan-biao-zhun.jpg' },
+
+            // 会员权益专区
             { id: 3, title: '会员权益', tag: 'VIP专区', desc: '会员专享权益，尊贵体验。', price: '会员专享', category: 'vip', img: 'https://i.postimg.cc/wxW0mbtQ/hui-yuan-quan-yi.png' },
+
+            // 体验单/护航单
             { id: 4, title: '新客体验', tag: '体验主题', desc: '新客户专享体验单，快速上手。', price: '体验价', category: 'delta', img: 'https://i.postimg.cc/LXRcTt6q/jue-mi-ti-yan-dan.jpg' },
             { id: 5, title: '机密体验', tag: '机密主题', desc: '机密专属体验，内容更丰富。', price: '机密价', category: 'delta', img: 'https://i.postimg.cc/k490cQXC/ji-mi-ti-yan-dan.jpg' },
             { id: 6, title: '正价护航', tag: '护航主题', desc: '正价护航，稳定保障全程。', price: '正价', category: 'delta', img: 'https://i.postimg.cc/0QxTfY2z/jue-mi-zheng-jia-hu-hang-dan.jpg' },
+
+            // 陪玩单
             { id: 7, title: '陪玩价目表', tag: '陪玩主题', desc: '陪玩价格一览，多种档位可选。', price: '详见价目表', category: 'peiwang', img: 'https://i.postimg.cc/W3jBnGbq/jue-mi-pei-wan.jpg' },
             { id: 8, title: '机密陪玩单', tag: '机密主题', desc: '机密陪玩，专属定制体验。', price: '机密价', category: 'peiwang', img: 'https://i.postimg.cc/Qts2bQxs/ji-mi-pei-wan-dan.jpg' },
+
+            // 机密趣味单专区
             { id: 12, title: '一命通关机密版', tag: '机密主题', desc: '一命通关机密版，难度升级。', price: '398R/起', category: 'secret', img: 'https://i.postimg.cc/hjgkrLPK/ji-mi-yi-ming-tong-guan.jpg' },
             { id: 13, title: '娱乐体验单', tag: '娱乐主题', desc: '娱乐体验单，轻松愉快。', price: '258R', category: 'secret', img: 'https://i.postimg.cc/qRL9ZNzs/yu-le-ti-yan-dan.jpg' },
             { id: 14, title: '嘉豪版/霸总版趣味体验单', tag: '趣味主题', desc: '嘉豪版或霸总版趣味体验，任选。', price: '298R', category: 'secret', img: 'https://i.postimg.cc/0QxTfY2k/jia-hao-ban-ba-zong-ban-qu-wei-ti-yan.jpg' },
             { id: 17, title: '清图二连撤', tag: '趣味主题', desc: '清图二连撤，节奏紧凑。', price: '258R', category: 'secret', img: 'https://i.postimg.cc/xCYwRvTv/qing-tu-er-lian-che.jpg' },
+
+            // 绝密趣味单专区
             { id: 9, title: '一命通关', tag: '挑战主题', desc: '一命通关，挑战极限操作。', price: '288R/起', category: 'fun', img: 'https://i.postimg.cc/503ZkX6C/yi-ming-tong-guan.jpg' },
             { id: 10, title: '铁人三项', tag: '挑战主题', desc: '铁人三项，综合考验实力。', price: '588R', category: 'fun', img: 'https://i.postimg.cc/cHZpmR4B/tie-ren-san-xiang.jpg' },
             { id: 11, title: '小小巨人', tag: '趣味主题', desc: '小小巨人，趣味与挑战并存。', price: '388R/起', category: 'fun', img: 'https://i.postimg.cc/sXct0MvZ/xiao-xiao-ju-ren.jpg' },
